@@ -34,6 +34,25 @@ const App = () => {
 
   return (
     <div>
+      {/** Here's the lifecycle process when there is a state change!
+       * When the Button is clicked, the state `count` changes.
+       * As a result, Button re-renders (due to the change of prop), and App re-renders (due to the change of state)
+       * When App re-renders, it re-calculates all the functions declared within the App
+       * That includes `handleRemove` and `handleIncrement`, as well as the `onChangeText` handler
+       * These functions are also passed into the child components as props.
+       *
+       * So guess what happened? (due to change of props)
+       * All child components re-rerender, though most of them are unnecessary! (impact perf!)
+       *
+       * So how?
+       * By wrapping the StateFn handler with useCallback!
+       * This tells React to memoize the function value somewhere in the memory,
+       * and only recalculate the function when it is supposed to.
+       *
+       * So, child components without state and prop change now won't re-render,
+       * when there is a state change is the parent. (perf ⬆️)
+       *
+       */}
       <Button count={count} onClick={handleIncrement} />
       <List users={users} onRemove={handleRemove} />
       <Input
