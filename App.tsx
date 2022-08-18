@@ -1,4 +1,11 @@
-// @ts-ignore
+/** Some key takeaways from this tutorial:
+ * 1. component re-renders when there is a state change or when the prop it receives changes. (fundamental)
+ * 2. when a component re-renders, it re-calculates the functions declared within the component.
+ * 3. useCallback hook tells React to memoize (or cache) a function value unless there is a change of value in the dependency array.
+ * 4. React.memo tells React to compare the Component props with the previous props and only re-render if they are different.
+ * ---> read https://dmitripavlutin.com/use-react-memo-wisely/
+ */
+
 import * as React from 'react';
 import List from './List';
 import Button from './Button';
@@ -25,12 +32,19 @@ const App = () => {
     (id: string) => {
       setUsers(users.filter((u) => u.id !== id));
     },
-    [users] // this tells React to re-calculate the handleIncrement function when `users` state changes
+    [users] // Hey React! pls re-calculate the handleIncrement function when `users` state changes
   );
 
   const handleIncrement = useCallback(() => {
     setCount((prev) => prev + 1);
-  }, [count]); // this tells React to re-calculate the handleIncrement function when `count` state changes
+  }, [count]); // Hey React! pls re-calculate the handleIncrement function when `count` state changes
+
+  const handleChangeText = useCallback(
+    (e) => {
+      setValue(e.target.value);
+    },
+    [value]
+  );
 
   return (
     <div>
@@ -41,8 +55,9 @@ const App = () => {
        * That includes `handleRemove` and `handleIncrement`, as well as the `onChangeText` handler
        * These functions are also passed into the child components as props.
        *
-       * So guess what happened? (due to change of props)
-       * All child components re-rerender, though most of them are unnecessary! (impact perf!)
+       * So guess what happened?
+       * All child components re-rerender, though most of them are unnecessary! (# due to change of props)
+       * ---> # think from the child components' POV, they receive a new function as prop, also considered a prop change!
        *
        * So how?
        * By wrapping the StateFn handler with useCallback!
@@ -55,12 +70,7 @@ const App = () => {
        */}
       <Button count={count} onClick={handleIncrement} />
       <List users={users} onRemove={handleRemove} />
-      <Input
-        value={value}
-        onChangeText={(e) => {
-          setValue(e.target.value);
-        }}
-      />
+      <Input value={value} onChangeText={handleChangeText} />
     </div>
   );
 };
