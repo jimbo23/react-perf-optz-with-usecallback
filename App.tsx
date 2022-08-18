@@ -10,6 +10,7 @@ import * as React from 'react';
 import List from './List';
 import Button from './Button';
 import Input from './Input';
+import BigList from './BigList';
 import { useCallback, useState } from 'react';
 
 export interface User {
@@ -71,6 +72,7 @@ const App = () => {
       <Button count={count} onClick={handleIncrement} />
       <List users={users} onRemove={handleRemove} />
       <Input value={value} onChangeText={handleChangeText} />
+      <BigList />
     </div>
   );
 };
