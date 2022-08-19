@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
  * Only update the relevant child when you have a big list of items
  * Good read: https://alexsidorenko.com/blog/react-list-rerender/
  */
-const BIG_LIST = [...Array(5).keys()].map((_, i) => ({
+const BIG_LIST = [...Array(1000).keys()].map((_, i) => ({
   id: uuidv4(),
   isChecked: false,
 }));
